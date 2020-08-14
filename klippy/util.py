@@ -31,14 +31,14 @@ def clear_hupcl(fd):
         pass
 
 # Support for creating a pseudo-tty for emulating a serial port
-def create_pty(ptyname):
+def create_pty(ptyname, insecure=False):
     mfd, sfd = pty.openpty()
     try:
         os.unlink(ptyname)
     except os.error:
         pass
     filename = os.ttyname(sfd)
-    os.chmod(filename, 0o660)
+    os.chmod(filename, 0o666 if insecure else 0o660)
     os.symlink(filename, ptyname)
     set_nonblock(mfd)
     old = termios.tcgetattr(mfd)
