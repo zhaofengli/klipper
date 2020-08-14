@@ -266,6 +266,8 @@ def main():
                     help="write log to file instead of stderr")
     opts.add_option("-v", action="store_true", dest="verbose",
                     help="enable debug messages")
+    opts.add_option("--insecure-tty", action="store_true", dest="insecuretty",
+                    help="allow global access to input tty")
     opts.add_option("-o", "--debugoutput", dest="debugoutput",
                     help="write output to file instead of to serial port")
     opts.add_option("-d", "--dictionary", dest="dictionary", type="string",
@@ -285,7 +287,7 @@ def main():
         debuginput = open(options.debuginput, 'rb')
         start_args['gcode_fd'] = debuginput.fileno()
     else:
-        start_args['gcode_fd'] = util.create_pty(options.inputtty)
+        start_args['gcode_fd'] = util.create_pty(options.inputtty, options.insecuretty)
     if options.debugoutput:
         start_args['debugoutput'] = options.debugoutput
         start_args.update(options.dictionary)
